@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Terrace — World Cup watch-along",
+  "version": "0.1.0",
+  "description": "A floating broadcast widget that follows the World Cup with you: live score, reactions, and the whole terrace, on any page.",
+  "permissions": ["notifications", "storage"],
+  "host_permissions": ["http://localhost:8787/*", "ws://localhost:8787/*"],
+  "action": { "default_popup": "popup.html", "default_title": "Terrace" },
+  "background": { "service_worker": "bg.js" },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["widget.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": { "128": "icon128.png" }
+}
