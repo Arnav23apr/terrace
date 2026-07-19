@@ -1,0 +1,17 @@
+name = "terrace-ws"
+main = "src/index.ts"
+compatibility_date = "2026-07-01"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+
+[[durable_objects.bindings]]
+name = "TERRACE"
+class_name = "TerraceHub"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["TerraceHub"]
+
+[vars]
+MIN_PER_SEC = "2"
+REPLAY_GAP_SEC = "15"

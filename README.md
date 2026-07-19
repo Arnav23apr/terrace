@@ -4,7 +4,7 @@
 
 A live watch-along for the 2026 World Cup: join a match room, pick your end, react with the crowd in real time, call the next goal in live polls, and out-sing the other end on the rivalry scarf — on the site or in a floating browser-extension widget over any stream. Results land proof-verified from the on-chain TxLINE feed.
 
-> **Submission links** · Demo video: _in submission form_ · Live app: _in submission form_
+> **Submission links** · Demo video: _in submission form_ · Live app: https://terrace-wc.pages.dev · realtime backend: https://terrace-ws.arnav23apr.workers.dev (Cloudflare Durable Object, laptop-independent)
 > Fans **sign up through Solana**: wallet sign-in (Phantom/Backpack/Solflare message signature) is the account.
 
 ## Why a fan opens it every match

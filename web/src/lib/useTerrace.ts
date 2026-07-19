@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { MatchState, MatchEvent, RoomState, Poll, PollResult } from "./types";
 
-const WS_URL = process.env.NEXT_PUBLIC_TERRACE_WS ?? "ws://localhost:8787/ws";
+const WS_URL = process.env.NEXT_PUBLIC_TERRACE_WS ?? (typeof window !== "undefined" && window.location.hostname === "localhost" ? "ws://localhost:8787/ws" : "wss://terrace-ws.arnav23apr.workers.dev/ws");
 
 type Handlers = {
   onReact?: (r: { emoji: string; from: string; side: number }) => void;
