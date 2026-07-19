@@ -25,7 +25,15 @@ function myHandle(): string {
 interface Float { key: number; glyph: string; x: number; side: number; }
 interface TickerItem extends MatchEvent { key: number; }
 
-export function LiveRoom({ matchId, roomId }: { matchId: string; roomId: string }) {
+export function LiveRoom({ matchId, roomId: roomIdProp }: { matchId: string; roomId?: string }) {
+  const roomId = useMemo(() => {
+    if (roomIdProp) return roomIdProp;
+    if (typeof window !== "undefined") {
+      const q = new URLSearchParams(window.location.search).get("room");
+      if (q) return q;
+    }
+    return `match-${matchId}`;
+  }, [roomIdProp, matchId]);
   const [floats, setFloats] = useState<Float[]>([]);
   const [ticker, setTicker] = useState<TickerItem[]>([]);
   const [goal, setGoal] = useState<{ team: number; player?: string; text: string; score: [number, number] } | null>(null);

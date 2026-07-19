@@ -5,12 +5,12 @@
 import type { CSSProperties } from "react"
 
 interface ShinyPillProps {
-    text: string
+    text?: string
     link?: string
-    textColor: string
-    shineColor: string
-    speed: number
-    font: any
+    textColor?: string
+    shineColor?: string
+    speed?: number
+    font?: any
     style?: CSSProperties
 }
 

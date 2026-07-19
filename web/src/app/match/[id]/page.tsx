@@ -6,7 +6,7 @@ const HTTP_BASE = process.env.TERRACE_HTTP ?? "http://localhost:8787";
 /** Shared room links get a real title ("Spain v Argentina · Terrace"). */
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   try {
-    const res = await fetch(`${HTTP_BASE}/matches`, { next: { revalidate: 30 } });
+    const res = await fetch(`${HTTP_BASE}/matches`);
     const { matches } = (await res.json()) as { matches: { id: string; home: string; away: string }[] };
     const m = matches.find((x) => x.id === params.id);
     if (m) {
@@ -23,7 +23,10 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   return { title: "Live match" };
 }
 
-export default function MatchPage({ params, searchParams }: { params: { id: string }; searchParams: { room?: string } }) {
-  const roomId = searchParams.room ?? `match-${params.id}`;
-  return <LiveRoom matchId={params.id} roomId={roomId} />;
+export function generateStaticParams() {
+  return ["esp-arg", "eng-ger", "bra-fra", "por-ned"].map((id) => ({ id }));
+}
+
+export default function MatchPage({ params }: { params: { id: string } }) {
+  return <LiveRoom matchId={params.id} />;
 }
