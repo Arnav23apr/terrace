@@ -15,6 +15,7 @@
 import http from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { MATCHES, MatchDef, MatchState, MatchEvent, SEED_PREDICTORS } from "./matches";
+import { refreshTxline, getTxlineStatus } from "./txline";
 
 const PORT = Number(process.env.PORT ?? 8787);
 const MIN_PER_SEC = Number(process.env.MIN_PER_SEC ?? 1); // 1 match-minute per real second
@@ -274,6 +275,11 @@ const httpServer = http.createServer((req, res) => {
     res.end(JSON.stringify({ matches: MATCHES.map((d) => stateOf(d.id)) }));
     return;
   }
+  if (req.url === "/txline-status") {
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify(getTxlineStatus(), null, 2));
+    return;
+  }
   res.statusCode = 404; res.end("not found");
 });
 
@@ -341,3 +347,15 @@ function leave(ws: WebSocket) {
 setInterval(tickEngine, 700);
 setInterval(botTick, 900);
 httpServer.listen(PORT, () => console.log(`terrace server on :${PORT} (ws /ws) · ${MIN_PER_SEC} match-min/sec`));
+
+// Live TxLINE integration: authenticate + poll fixtures on boot, then refresh
+// hourly. Uses real fixtures when the data tier is reachable; falls back to the
+// scripted (schema-matched) fixtures while TxODDS activation is blocked.
+async function bootTxline() {
+  const fx = await refreshTxline();
+  const st = getTxlineStatus();
+  console.log(`TxLINE: guest auth ${st.guestAuth.ok ? "OK (" + st.guestAuth.jwtPreview + ")" : "FAILED"} · fixtures ${st.fixtures.source} (${st.fixtures.note})`);
+  if (fx && fx.length) console.log(`TxLINE: ${fx.length} live fixtures received`);
+}
+bootTxline();
+setInterval(bootTxline, 3600_000);
